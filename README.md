@@ -24,5 +24,5 @@ Con, ovviamente, i valori personali.
 Per il circuito visitare la cartella [/schematic](./schematic/) nella quale è contenuta un'immagine della schematica e
 tutta la rispettiva documentazione, il tutto per realizzare il progetto anche nella realtà.
 
-# Licenza
+# 📜 Licenza
 Il progetto è sotto licenza GPL v2, visionabile nel file LICENSE.
