@@ -14,15 +14,18 @@
 #include <WiFi.h>
 #include <ESPAsyncWebServer.h>
 
+// Secrets
+#include "secrets.h"
+
 // PINS delle luci
-#define LIGHT_1                             32
-#define LIGHT_2                             33
+#define LIGHT_1                             27
+#define LIGHT_2                             26
 #define LIGHT_3                             25
-#define LIGHT_4                             26
-#define LIGHT_5                             27
-#define LIGHT_6                             21
-#define LIGHT_7                             16
-#define LIGHT_8                             17
+#define LIGHT_4                             33
+#define LIGHT_5                             32
+#define LIGHT_6                             13
+#define LIGHT_7                             12
+#define LIGHT_8                             23
 
 // Numero di luci
 #define LIGHTS                              8
@@ -31,8 +34,6 @@
 #define EEPROM_BYTES                        LIGHTS
 
 // WIFI
-#define SSID                                "UPDATE"
-#define PASSWORD                            "UPDATE"
 #define HOSTNAME                            "scroksbox.local"
 
 // HTTP Server

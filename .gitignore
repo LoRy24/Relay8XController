@@ -1,3 +1,8 @@
+# Build
 /.pio/
-.env
+
+# IntelliJ IDEs
 /.idea/
+
+# Secrets
+src/secrets.h
