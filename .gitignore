@@ -5,4 +5,4 @@
 /.idea/
 
 # Secrets
-src/secrets.h
+include/secrets.h

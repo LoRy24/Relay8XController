@@ -3,7 +3,18 @@
 //
 
 // Libs
-#include "Utils.h"
+#include "../../include/Utils.h"
+
+//
+// Registers
+//
+
+#pragma region Registers
+
+// IPv4
+String ipv4;
+
+#pragma endregion
 
 //
 // Impl
@@ -29,6 +40,9 @@ void setupWiFi() {
 
     // Notifica la connessione
     Serial.println("Connesso!");
+
+    // Salva l'indirizzo
+    ipv4 = WiFi.localIP().toString();
 }
 
 #pragma endregion

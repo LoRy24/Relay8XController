@@ -12,10 +12,10 @@
 #include <Arduino.h>
 
 // Secrets
-#include "utils/Utils.h"
-#include "settings.h"
-#include "http/HttpManagementServer.h"
-#include "controlling/Management.h"
+#include "../include/Utils.h"
+#include "../include/settings.h"
+#include "../include/HttpManagementServer.h"
+#include "../include/Management.h"
 
 #pragma endregion
 

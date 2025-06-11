@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ScrokBox Panel</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Ancizar+Sans:ital,wght@0,100..1000;1,100..1000&family=Edu+NSW+ACT+Cursive:wght@400..700&display=swap');
+
+        html {
+            background-color: #0a0a0a;
+            padding: 0;
+            margin: 0;
+        }
+
+        body {
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            font-family: sans-serif;
+            color: #ffffff;
+            margin: 0;
+            padding: 0;
+        }
+
+        h2 {
+            font-family: sans-serif;
+            color: #ffffff;
+            margin: 0;
+            padding: 0;
+        }
+
+        #page-content {
+            width: 100%;
+            min-width: 720px;
+            height: 100vh;
+            min-height: 550px;
+            max-width: 1200px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #panel-title {
+            font-size: 92px;
+            font-family: "Ancizar Sans", sans-serif;
+        }
+
+        #buttons-divisor-from-title {
+            width: 600px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            margin-top: 24px;
+            margin-bottom: 36px;
+        }
+
+        #buttons-divisor-from-title-line {
+            width: 100%;
+            height: 1px;
+            background-color: #262626;
+        }
+
+        #buttons-divisor-from-title-text {
+            margin-right: 24px;
+            font-size: 16px;
+            color: #e0e0e0;
+        }
+
+        #buttons-content {
+            width: 600px;
+            height: auto;
+            min-height: 160px;
+            gap: 16px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .button-content-row {
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+        }
+
+        .light-button {
+            width: 138px;
+            height: 180px;
+            border-radius: 24px;
+            transition: 250ms;
+            cursor: pointer;
+        }
+
+        /*noinspection CssUnusedSymbol*/
+        .lb-off {
+            background: rgba(200, 200, 200, 0.05);
+        }
+
+        /*noinspection CssUnusedSymbol*/
+        .lb-on {
+            background: rgba(184, 137, 255, 0.75);
+        }
+
+        .lb-error {
+            background: rgba(255, 199, 142, 0.75);
+        }
+
+    </style>
+</head>
+<body>
+    <div id="page-content">
+        <h1 id="panel-title">ScrokBox v1.0.0</h1>
+        <div id="buttons-divisor-from-title">
+            <h1 id="buttons-divisor-from-title-text">Buttons</h1>
+            <div id="buttons-divisor-from-title-line"></div>
+        </div>
+        <div id="buttons-content">
+            <div class="button-content-row">
+                <div class="light-button lb-error" id="light-button-1"></div>
+                <div class="light-button lb-error" id="light-button-2"></div>
+                <div class="light-button lb-error" id="light-button-3"></div>
+                <div class="light-button lb-error" id="light-button-4"></div>
+            </div>
+            <div class="button-content-row">
+                <div class="light-button lb-error" id="light-button-5"></div>
+                <div class="light-button lb-error" id="light-button-6"></div>
+                <div class="light-button lb-error" id="light-button-7"></div>
+                <div class="light-button lb-error" id="light-button-8"></div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        // Stati pulsanti luci
+        let lightButton = [false, false, false, false, false, false, false, false];
+
+        function setButtonState(state, id) {
+            lightButton[id] = state;
+            if (lightButton[id] === true) {
+                document.getElementById("light-button-" + (id + 1)).classList.add("lb-on");
+                document.getElementById("light-button-" + (id + 1)).classList.remove("lb-off");
+            }
+            else {
+                document.getElementById("light-button-" + (id + 1)).classList.remove("lb-on");
+                document.getElementById("light-button-" + (id + 1)).classList.add("lb-off");
+            }
+        }
+
+        function toggleButtonState(id) {
+            setButtonState(!lightButton[id], id);
+        }
+
+        function fetchWithTimeout(url, timeout = 150) {
+            return Promise.race([
+                fetch(url),
+                new Promise((_, reject) =>
+                    setTimeout(() => reject(new Error('Timeout')), timeout)
+                )
+            ]);
+        }
+
+        function init() {
+            for (let i = 0; i < 8; ++i) {
+                // Prende il pulsante
+                let button = document.getElementById("light-button-" + (i + 1));
+
+                // Prova a ottenere lo stato
+
+                // Per ora, inizializza
+                button.classList.add("lb-off");
+                button.classList.remove("lb-error");
+                button.onclick = function () {
+                    toggleButtonState(i);
+                }
+            }
+        }
+
+        init();
+    </script>
+</body>
+</html>

@@ -12,6 +12,9 @@
 #include "secrets.h"
 #include "settings.h"
 
+// IP
+extern String ipv4;
+
 /**
  * Configura la connessione wireless.
  */

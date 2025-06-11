@@ -16,8 +16,8 @@
 
 // Internal
 #include "settings.h"
-#include "controlling/Management.h"
-#include "utils/Utils.h"
+#include "Management.h"
+#include "Utils.h"
 
 #pragma endregion
 
