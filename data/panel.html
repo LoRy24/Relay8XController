@@ -95,21 +95,23 @@
             height: 180px;
             border-radius: 24px;
             transition: 250ms;
-            cursor: pointer;
         }
 
         /*noinspection CssUnusedSymbol*/
         .lb-off {
             background: rgba(200, 200, 200, 0.05);
+            cursor: pointer;
         }
 
         /*noinspection CssUnusedSymbol*/
         .lb-on {
             background: rgba(184, 137, 255, 0.75);
+            cursor: pointer;
         }
 
         .lb-error {
             background: rgba(255, 199, 142, 0.75);
+            cursor: not-allowed;
         }
 
     </style>
@@ -123,16 +125,16 @@
         </div>
         <div id="buttons-content">
             <div class="button-content-row">
-                <div class="light-button lb-error" id="light-button-1"></div>
-                <div class="light-button lb-error" id="light-button-2"></div>
-                <div class="light-button lb-error" id="light-button-3"></div>
-                <div class="light-button lb-error" id="light-button-4"></div>
+                <div class="light-button lb-off" id="light-button-1"></div>
+                <div class="light-button lb-off" id="light-button-2"></div>
+                <div class="light-button lb-off" id="light-button-3"></div>
+                <div class="light-button lb-off" id="light-button-4"></div>
             </div>
             <div class="button-content-row">
-                <div class="light-button lb-error" id="light-button-5"></div>
-                <div class="light-button lb-error" id="light-button-6"></div>
-                <div class="light-button lb-error" id="light-button-7"></div>
-                <div class="light-button lb-error" id="light-button-8"></div>
+                <div class="light-button lb-off" id="light-button-5"></div>
+                <div class="light-button lb-off" id="light-button-6"></div>
+                <div class="light-button lb-off" id="light-button-7"></div>
+                <div class="light-button lb-off" id="light-button-8"></div>
             </div>
         </div>
     </div>
@@ -142,28 +144,54 @@
         let lightButton = [false, false, false, false, false, false, false, false];
 
         function setButtonState(state, id) {
+            // Salva lo stato
             lightButton[id] = state;
+
+            // Pulisci gli stati
+            document.getElementById("light-button-" + (id + 1)).classList.remove("lb-off");
+            document.getElementById("light-button-" + (id + 1)).classList.remove("lb-on");
+
+            // Imposta quello nuovo
             if (lightButton[id] === true) {
                 document.getElementById("light-button-" + (id + 1)).classList.add("lb-on");
-                document.getElementById("light-button-" + (id + 1)).classList.remove("lb-off");
             }
             else {
-                document.getElementById("light-button-" + (id + 1)).classList.remove("lb-on");
                 document.getElementById("light-button-" + (id + 1)).classList.add("lb-off");
             }
         }
 
         function toggleButtonState(id) {
-            setButtonState(!lightButton[id], id);
+            console.log("Toggle button #" + id);
+            fetch("/api/lights/toggle?lightId=" + (id + 1), {
+                method: "POST"
+            }).then((response) => response.json())
+                .then((data) => {
+                    setButtonState(data.newState === "on", id);
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
         }
 
-        function fetchWithTimeout(url, timeout = 150) {
-            return Promise.race([
-                fetch(url),
-                new Promise((_, reject) =>
-                    setTimeout(() => reject(new Error('Timeout')), timeout)
-                )
-            ]);
+        function updateButtonsStates() {
+            for (let i = 0; i < 8; ++i) {
+                // Prende il pulsante
+                let button = document.getElementById("light-button-" + (i + 1));
+
+                // Prova a ottenere lo stato
+                fetch("/api/lights/status?lightId=" + (i + 1))
+                    .then((response) => response.json())
+                    .then((data) => {
+                        setButtonState(data.state === "on", i);
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                        button.classList.remove("lb-off");
+                        button.classList.remove("lb-on");
+                        button.classList.add("lb-error");
+                        button.onclick = function () {}
+                    });
+            }
         }
 
         function init() {
@@ -172,14 +200,17 @@
                 let button = document.getElementById("light-button-" + (i + 1));
 
                 // Prova a ottenere lo stato
-
-                // Per ora, inizializza
-                button.classList.add("lb-off");
-                button.classList.remove("lb-error");
-                button.onclick = function () {
-                    toggleButtonState(i);
-                }
+                fetch("/api/lights/status?lightId=" + (i + 1))
+                    .then((response) => response.json())
+                    .then((data) => {
+                        setButtonState(data.state === "on", i);
+                        button.onclick = function () {
+                            toggleButtonState(i);
+                        }
+                    });
             }
+
+            setInterval(updateButtonsStates, 2000);
         }
 
         init();

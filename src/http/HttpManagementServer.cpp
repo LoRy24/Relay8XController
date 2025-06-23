@@ -176,6 +176,10 @@ void launchHTTPServer() {
         handleLightToggle(request);
     });
 
+    httpServer.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
+        request->send(SPIFFS, "/panel.html", "text/html");
+    });
+
     // Not found status
     httpServer.onNotFound([](AsyncWebServerRequest *request) {
         handleNotFound(request);

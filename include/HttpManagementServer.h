@@ -13,6 +13,7 @@
 
 // Libs
 #include <ESPAsyncWebServer.h>
+#include <SPIFFS.h>
 
 // Internal
 #include "settings.h"

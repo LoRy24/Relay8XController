@@ -10,6 +10,7 @@
 
 // Libs
 #include <Arduino.h>
+#include <SPIFFS.h>
 
 // Secrets
 #include "../include/Utils.h"
@@ -46,6 +47,12 @@ void setup() {
 
     // EEPROM
     EEPROM.begin(EEPROM_BYTES);
+
+    // SPIFFS
+    if (!SPIFFS.begin(true)) {
+        Serial.println("Errore nell'avvio di SPIFFS");
+        return;
+    }
 
     // Init delle luci
     for (int i = 0; i < LIGHTS; i++) {
