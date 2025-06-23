@@ -23,28 +23,46 @@ AsyncWebServer httpServer(SERVER_PORT);
 #pragma region Utils
 
 bool doLightsValueChecksAndFetchLightID(AsyncWebServerRequest *request, int* lightId) {
+    // Stato
+    bool state = true;
+
+    // Oggetto risposta
+    AsyncWebServerResponse* response;
+
     // Verifica che sia presente l'ID della luce
     if (!request->hasParam("lightId")) {
-        request->send(404, "text/json", R"({"message":"Light's ID is missing!"})");
-        return false;
+        response = request->beginResponse(404, "text/json", R"({"message":"Light's ID is missing!"})");
+        state = false;
+        goto outValidation;
     }
 
     // Prova a convertire e caricare l'ID della luce
     try {
         *lightId = request->getParam("lightId")->value().toInt();
     } catch (...) {
-        request->send(500, "text/json", R"({"message":"Invalid lightId!"})");
-        return false;
+        response = request->beginResponse(500, "text/json", R"({"message":"Invalid lightId!"})");
+        state = false;
+        goto outValidation;
     }
 
     // Vedi che sia compreso tra 1 e il limite
     if (*lightId < 1 || *lightId > LIGHTS) {
-        request->send(500, "text/json", R"({"message":"Invalid lightId!"})");
-        return false;
+        response = request->beginResponse(500, "text/json", R"({"message":"Invalid lightId!"})");
+        state = false;
     }
 
-    // Tutto apposto
-    return true;
+    outValidation:
+
+    if (!state) {
+        // Aggiunge gli header e manda la risposta
+        response->addHeader("Access-Control-Allow-Origin", "*");
+        response->addHeader("Access-Control-Allow-Methods", "GET, POST");
+        response->addHeader("Access-Control-Allow-Headers", "Content-Type");
+        request->send(response);
+    }
+
+    // Ritorna lo stato
+    return state;
 }
 
 #pragma endregion
@@ -70,8 +88,14 @@ void handleFetchLightStatus(AsyncWebServerRequest* request) {
     char buffer[256] = {};
     sprintf(buffer, R"({"message":"Light state fetched successfully!","state":"%s"})", convertSignalToText(lightsStates[lightId]));
 
+    // Oggetto risposta con headers
+    const auto response = request->beginResponse(200, "text/json", buffer);
+    response->addHeader("Access-Control-Allow-Origin", "*");
+    response->addHeader("Access-Control-Allow-Methods", "GET, POST");
+    response->addHeader("Access-Control-Allow-Headers", "Content-Type");
+
     // Risponde
-    request->send(200, "text/json", buffer);
+    request->send(response);
 }
 
 void handleLightToggle(AsyncWebServerRequest* request) {
@@ -87,13 +111,25 @@ void handleLightToggle(AsyncWebServerRequest* request) {
     char buffer[256] = {};
     sprintf(buffer, R"({"message":"Light toggled successfully!","newState":"%s"})", convertSignalToText(lightsStates[lightId]));
 
-    // Invia la risposta
-    request->send(200, "text/json", buffer);
+    // Oggetto risposta con headers
+    const auto response = request->beginResponse(200, "text/json", buffer);
+    response->addHeader("Access-Control-Allow-Origin", "*");
+    response->addHeader("Access-Control-Allow-Methods", "GET, POST");
+    response->addHeader("Access-Control-Allow-Headers", "Content-Type");
+
+    // Risponde
+    request->send(response);
 }
 
 void handleNotFound(AsyncWebServerRequest* request) {
+    // Oggetto risposta con headers
+    const auto response = request->beginResponse(200, "text/json", R"({"message":"Resource not found!"})");
+    response->addHeader("Access-Control-Allow-Origin", "*");
+    response->addHeader("Access-Control-Allow-Methods", "GET, POST");
+    response->addHeader("Access-Control-Allow-Headers", "Content-Type");
+
     // Risponde
-    request->send(404, "text/plain", R"({"message":"Resource not found!"})");
+    request->send(response);
 }
 
 void handleShutdown(AsyncWebServerRequest* request) {
@@ -101,8 +137,14 @@ void handleShutdown(AsyncWebServerRequest* request) {
     for (int i = 0; i < LIGHTS; i++)
         setLightState(i, LOW);
 
-    // Invia la risposta
-    request->send(200, "text/json", R"({"message":"Shutdown executed!"})");
+    // Oggetto risposta con headers
+    const auto response = request->beginResponse(200, "text/json", R"({"message":"Shutdown executed!"})");
+    response->addHeader("Access-Control-Allow-Origin", "*");
+    response->addHeader("Access-Control-Allow-Methods", "GET, POST");
+    response->addHeader("Access-Control-Allow-Headers", "Content-Type");
+
+    // Risponde
+    request->send(response);
 }
 
 #pragma endregion
