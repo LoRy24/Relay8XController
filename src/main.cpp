@@ -54,11 +54,15 @@ void setup() {
         return;
     }
 
-    // Init delle luci
+    // Init delle luci e dei pulsanti
     for (int i = 0; i < LIGHTS; i++) {
+        // Luce
         pinMode(lightsPins[i], OUTPUT);
         lightsStates[i] = EEPROM.read(i);
         digitalWrite(lightsPins[i], !lightsStates[i]);
+
+        // Pulsante
+        pinMode(lights)
     }
 
     // Caricamento completato luci inizio WiFi

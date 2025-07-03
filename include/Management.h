@@ -29,6 +29,7 @@
 // Registri esterni
 extern int lightsStates[8];
 extern int lightsPins[8];
+extern int lightsButtonsPins[8];
 
 #pragma endregion
 

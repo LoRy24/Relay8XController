@@ -21,6 +21,11 @@ int lightsPins[8] = {
     LIGHT_1, LIGHT_2, LIGHT_3, LIGHT_4, LIGHT_5, LIGHT_6, LIGHT_7, LIGHT_8
 };
 
+// Pins dei pulsanti
+int lightsButtonsPins[8] {
+    LIGHT_BUTTON_1, LIGHT_BUTTON_2, LIGHT_BUTTON_3, LIGHT_BUTTON_4, LIGHT_BUTTON_5, LIGHT_BUTTON_6, LIGHT_BUTTON_7, LIGHT_BUTTON_8
+};
+
 #pragma endregion
 
 //
